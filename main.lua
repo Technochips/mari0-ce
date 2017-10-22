@@ -302,7 +302,7 @@ function love.load(arg)
 	
 	add("Variables")
 	changescale(scale, true)
-	print("a")
+	
 	add("Resolution change")
 	require "characterloader"
 	add("Characterloader")
@@ -1624,7 +1624,7 @@ function love.keyreleased(key)
 	end
 end
 
-function love.mousepressed(x, y, button)
+function love.mousepressed(x, y, button, istouch)
 	if fullscreen then
 		if fullscreenmode == "full" then
 			x, y = x/(desktopsize.width/(width*16*scale)), y/(desktopsize.height/(height*16*scale))
@@ -1693,6 +1693,12 @@ function love.mousereleased(x, y, button)
 	
 	for i, v in pairs(guielements) do
 		v:unclick(x, y, button)
+	end
+end
+
+function love.wheelmoved(x, y)
+	if gamestate == "game" then
+		game_wheelmoved(x, y)
 	end
 end
 

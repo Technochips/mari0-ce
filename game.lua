@@ -275,10 +275,10 @@ function game_update(dt)
 				gelcannontimer = 0
 			end
 		else
-			if love.mouse.isDown("l") then
+			if love.mouse.isDown(1) then
 				gelcannontimer = gelcannondelay
 				objects["player"][mouseowner]:shootgel(1)
-			elseif love.mouse.isDown("r") then
+			elseif love.mouse.isDown(2) then
 				gelcannontimer = gelcannondelay
 				objects["player"][mouseowner]:shootgel(2)
 			end
@@ -1183,7 +1183,7 @@ function game_draw()
 		love.graphics.translate(-xtranslate, -ytranslate)
 	end
 	
-	currentscissor = {0, 0,love.window.getWidth(), love.window.getHeight()}
+	currentscissor = {0, 0,love.graphics.getWidth(), love.graphics.getHeight()}
 	--This is just silly
 	if earthquake > 0 and #rainbooms > 0 then
 		local colortable = {{242, 111, 51}, {251, 244, 174}, {95, 186, 76}, {29, 151, 212}, {101, 45, 135}, {238, 64, 68}}
@@ -1470,11 +1470,12 @@ function game_draw()
 						
 						--SCISSOR FOR ENTRY
 						if v.customscissor and v.portalable ~= false then
-							local t = "setStencil"
+							local t = "replace"
 							if v.invertedscissor then
-								t = "setInvertedStencil"
+								t = "invert"
 							end
-							love.graphics[t](function() love.graphics.rectangle("fill", math.floor((v.customscissor[1]-xscroll)*16*scale), math.floor((v.customscissor[2]-.5-yscroll)*16*scale), v.customscissor[3]*16*scale, v.customscissor[4]*16*scale) end)
+							love.graphics.stencil(function() love.graphics.rectangle("fill", math.floor((v.customscissor[1]-xscroll)*16*scale), math.floor((v.customscissor[2]-.5-yscroll)*16*scale), v.customscissor[3]*16*scale, v.customscissor[4]*16*scale) end)
+							love.graphics.setStencilTest("greater", 0)
 						end
 							
 						if v.static == false and v.portalable ~= false then
@@ -1553,11 +1554,12 @@ function game_draw()
 						
 						--portal duplication
 						if v.customscissor and v.portalable ~= false then
-							local t = "setStencil"
+							local t = "replace"
 							if v.invertedscissor then
-								t = "setInvertedStencil"
+								t = "invert"
 							end
-							love.graphics[t](function() love.graphics.rectangle("fill", math.floor((v.customscissor[1]-xscroll)*16*scale), math.floor((v.customscissor[2]-.5-yscroll)*16*scale), v.customscissor[3]*16*scale, v.customscissor[4]*16*scale) end)
+							love.graphics.stencil(function() love.graphics.rectangle("fill", math.floor((v.customscissor[1]-xscroll)*16*scale), math.floor((v.customscissor[2]-.5-yscroll)*16*scale), v.customscissor[3]*16*scale, v.customscissor[4]*16*scale) end, t)
+							love.graphics.setStencilTest("greater", 0)
 						end
 						
 						if v.static == false and (v.active or v.portaloverride) and v.portalable ~= false then
@@ -1636,7 +1638,7 @@ function game_draw()
 							end
 						end
 						love.graphics.setScissor(unpack(currentscissor))
-						love.graphics.setStencil()
+						love.graphics.setStencilTest()
 					end
 				end
 			end
@@ -1852,7 +1854,7 @@ function game_draw()
 		drawforeground()
 	end --SCENE DRAW FUNCTION END
 	
-	if players == 1 and love.graphics.isSupported("canvas") and seethroughportals then
+	if players == 1 and love.graphics.getSupported("canvas") and seethroughportals then
 		if not scenecanvas then
 			scenecanvas = love.graphics.newCanvas()
 		end
@@ -3942,13 +3944,8 @@ function game_mousepressed(x, y, button)
 	if editormode then
 		editor_mousepressed(x, y, button)
 	else
-		if editormode then
-			editor_mousepressed(x, y, button)
-		end
-		
 		if not noupdate and objects["player"][mouseowner] and objects["player"][mouseowner].controlsenabled and objects["player"][mouseowner].vine == false then
-		
-			if button == "l" or button == "r" and objects["player"][mouseowner] then
+			if button == 1 or button == 2 and objects["player"][mouseowner] then
 				--knockback
 				if portalknockback then
 					local xadd = math.sin(objects["player"][mouseowner].pointingangle)*30
@@ -3960,8 +3957,7 @@ function game_mousepressed(x, y, button)
 					objects["player"][mouseowner]:setquad()
 				end
 			end
-		
-			if button == "l" then
+			if button == 1 then
 				if playertype == "portal" then
 					local sourcex = objects["player"][mouseowner].x+6/16
 					local sourcey = objects["player"][mouseowner].y+6/16
@@ -3973,7 +3969,7 @@ function game_mousepressed(x, y, button)
 					end
 				end
 				
-			elseif button == "r" then
+			elseif button == 2 then
 				if playertype == "portal" then
 					local sourcex = objects["player"][mouseowner].x+6/16
 					local sourcey = objects["player"][mouseowner].y+6/16
@@ -3986,24 +3982,27 @@ function game_mousepressed(x, y, button)
 				end
 			end
 		end
-			
-		if button == "wd" then
-			if bullettime then
-				speedtarget = speedtarget - 0.1
-				if speedtarget < 0.1 then
-					speedtarget = 0.1
-				end
-			elseif speeddebug then
-				speed = math.max(0, speed/2)
-			end
-		elseif button == "wu" then
-			if bullettime then
+	end
+end
+
+function game_wheelmoved(x, y)
+	if not editormode then
+		if bullettime then
+			if y > 0 then
 				speedtarget = speedtarget + 0.1
-				if speedtarget > 1 then
-					speedtarget = 1
-				end
-			elseif speeddebug then
+			elseif y < 0 then
+				speedtarget = speedtarget - 0.1
+			end
+			if speedtarget < 0.1 then
+				speedtarget = 0.1
+			elseif speedtarget > 1 then
+				speedtarget = 1
+			end
+		elseif speeddebug then
+			if y > 0 then
 				speed = math.min(1, speed*2)
+			elseif y < 0 then
+				speed = math.max(0, speed/2)
 			end
 		end
 	end
