@@ -254,7 +254,7 @@ function love.load(arg)
 	table.remove(shaderlist, rem)
 	table.insert(shaderlist, 1, "none")
 	
-	iconimg = love.image.newImageData("graphics/icon.gif")
+	iconimg = love.image.newImageData("graphics/icon.png")
 	love.window.setIcon(iconimg)
 	
 	love.graphics.setDefaultFilter("nearest", "nearest")
@@ -302,6 +302,7 @@ function love.load(arg)
 	
 	add("Variables")
 	changescale(scale, true)
+	print("a")
 	add("Resolution change")
 	require "characterloader"
 	add("Characterloader")
@@ -1526,14 +1527,12 @@ function changescale(s, init)
 			
 		end
 	end
-	
 	if fullscreen then
-		love.window.setMode(desktopsize.width, desktopsize.height, {fullscreen=fullscreen, vsync=vsync, fsaa=fsaa})
+		love.window.setMode(desktopsize.width, desktopsize.height, {fullscreen=fullscreen, vsync=vsync})
 	else
 		uispace = math.floor(width*16*scale/4)
-		love.window.setMode(width*16*scale, height*16*scale, {fullscreen=fullscreen, vsync=vsync, fsaa=fsaa}) --25x14 blocks (15 blocks actual height)
+		love.window.setMode(width*16*scale, height*16*scale, {fullscreen=fullscreen, vsync=vsync}) --25x14 blocks (15 blocks actual heigh
 	end
-	
 	if love.graphics.isSupported("canvas") then
 		completecanvas = love.graphics.newCanvas()
 		completecanvas:setFilter("linear", "linear")
