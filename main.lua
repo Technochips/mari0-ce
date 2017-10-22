@@ -1533,13 +1533,13 @@ function changescale(s, init)
 		uispace = math.floor(width*16*scale/4)
 		love.window.setMode(width*16*scale, height*16*scale, {fullscreen=fullscreen, vsync=vsync}) --25x14 blocks (15 blocks actual heigh
 	end
-	if love.graphics.isSupported("canvas") then
+	if love.graphics.getSupported("canvas") then
 		completecanvas = love.graphics.newCanvas()
 		completecanvas:setFilter("linear", "linear")
 	end
 	
-	gamewidth = love.window.getWidth()
-	gameheight = love.window.getHeight()
+	gamewidth = love.graphics.getWidth()
+	gameheight = love.graphics.getHeight()
 	
 	if shaders then
 		shaders:refresh()

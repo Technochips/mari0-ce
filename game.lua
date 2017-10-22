@@ -3585,19 +3585,13 @@ end
 function generatespritebatch()
 	smbspritebatch:clear()
 	smbspritebatchfront:clear()
-	smbspritebatch:bind()
-	smbspritebatchfront:bind()
 	
 	portalspritebatch:clear()
 	portalspritebatchfront:clear()
-	portalspritebatch:bind()
-	portalspritebatchfront:bind()
 	
 	if customtiles then
 		customspritebatch:clear()
 		customspritebatchfront:clear()
-		customspritebatch:bind()
-		customspritebatchfront:bind()
 	end
 	
 	
@@ -3682,7 +3676,7 @@ function generatespritebatch()
 		end
 	end
 	
-	--Unbind spritebatches
+	--[[Unbind spritebatches
 	smbspritebatch:unbind()
 	smbspritebatchfront:unbind()
 	
@@ -3692,7 +3686,7 @@ function generatespritebatch()
 	if customtiles then
 		customspritebatch:unbind()
 		customspritebatchfront:unbind()
-	end
+	end--]]
 end
 
 function game_keypressed(key)
