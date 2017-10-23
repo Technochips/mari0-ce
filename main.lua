@@ -89,7 +89,7 @@ function love.errhand(msg)
 	table.insert(err, "Mari0 Over.")
 	table.insert(err, "Crash = Very Yes.\n\n")
 	if not versionerror then
-		table.insert(err, "Send us a screenshot of this to crash@stabyourself.net, that'd be swell.\nAlso tell us what you were doing.\n")
+		table.insert(err, "Send us a screenshot of this to https://github.com/Technochips/mari0-ce/issues, that'd be swell.\nAlso tell us what you were doing.\n")
 	end
 	table.insert(err, "Mari0 " .. (marioversion or "UNKNOWN") .. ", LOVE " .. (love._version or "UNKNOWN") .. " running on " .. (love._os or "UNKNOWN") .. "\n")
 	if love.graphics.getRendererInfo then
@@ -213,7 +213,7 @@ function love.load(arg)
 	--blame slime
 	love.graphics.drawq = love.graphics.draw
 	
-	print("Loading Mari0 SE!")
+	print("Loading Mari0 CE!")
 	print("=======================")
 	lastline = debug.getinfo(1).currentline
 	starttime = love.timer.getTime()
@@ -317,7 +317,7 @@ function love.load(arg)
 	
 	hatcount = #love.filesystem.getDirectoryItems("graphics/standardhats")
 	saveconfig()
-	love.window.setTitle( "Mari0 SE" )
+	love.window.setTitle( "Mari0 CE" )
 	
 	love.graphics.setBackgroundColor(0, 0, 0)
 	
@@ -364,7 +364,7 @@ function love.load(arg)
 	
 	love.graphics.draw(logo, love.graphics.getWidth()/2, love.graphics.getHeight()/2, 0, logoscale, logoscale, 142, 150)
 	love.graphics.setColor(150, 150, 150)
-	properprint("loading mari0 se..", love.graphics.getWidth()/2-string.len("loading mari0 se..")*4*scale, love.graphics.getHeight()/2-170*logoscale-7*scale)
+	properprint("loading mari0 ce..", love.graphics.getWidth()/2-string.len("loading mari0 ce..")*4*scale, love.graphics.getHeight()/2-170*logoscale-7*scale)
 	love.graphics.setColor(50, 50, 50)
 	properprint(loadingtext, love.graphics.getWidth()/2-string.len(loadingtext)*4*scale, love.graphics.getHeight()/2+165*logoscale)
 	love.graphics.present()
@@ -993,7 +993,7 @@ function love.update(dt)
 		notice.update(dt)
 		
 		--love.window.setTitle("FPS:" .. love.timer.getFPS() .. " - Send feedback/issues to crash@stabyourself.net")
-		love.window.setTitle("Mari0 SE")
+		love.window.setTitle("Mari0 CE")
 	end
 end
 
