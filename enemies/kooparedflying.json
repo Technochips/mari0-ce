@@ -9,6 +9,8 @@
 	"killsonsides": true,
 	"killsonbottom": true,
 	
+	"nospritesets": true,
+	
 	"transforms": true,
 	"transformsinto": "koopared",
 	"transformtrigger": "stomp",
