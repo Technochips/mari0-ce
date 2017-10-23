@@ -3054,15 +3054,30 @@ function loadmap(filename, createobjects)
 		return false
 	end
 	local s = love.filesystem.read( "mappacks/" .. mappack .. "/" .. filename .. ".txt" )
-	local s2 = s:split(CATEGORYDELIMITER)
+	local blockdelimiter = BLOCKDELIMITER
+	local layerdelimiter = LAYERDELIMITER
+	local categorydelimiter = CATEGORYDELIMITER
+	local multiplydelimiter = MULTIPLYDELIMITER
+	local equalsign = EQUALSIGN
+	
+	if string.match(s, BLOCKDELIMITEROLD) then
+		print("* NOTE: SE beta 8 format" .. string.rep(" ", #(mappack .. filename)) .. " *")
+		blockdelimiter = BLOCKDELIMITEROLD
+		layerdelimiter = LAYERDELIMITEROLD
+		categorydelimiter = CATEGORYDELIMITEROLD
+		multiplydelimiter = MULTIPLYDELIMITEROLD
+		equalsign = EQUALSIGNOLD
+	end
+	
+	local s2 = s:split(categorydelimiter)
 	
 	local t
-	if string.find(s2[1], BLOCKDELIMITER) then
+	if string.find(s2[1], blockdelimiter) then
 		mapheight = 15
-		t = s2[1]:split(BLOCKDELIMITER)
+		t = s2[1]:split(blockdelimiter)
 	else
 		mapheight = tonumber(s2[1])
-		t = s2[2]:split(BLOCKDELIMITER)
+		t = s2[2]:split(blockdelimiter)
 	end
 	
 	map = {}
@@ -3082,7 +3097,7 @@ function loadmap(filename, createobjects)
 	--get mapwidth
 	local entries = 0
 	for i = 1, #t do
-		local s = t[i]:split(MULTIPLYDELIMITER)
+		local s = t[i]:split(multiplydelimiter)
 		if s[2] then
 			entries = entries + tonumber(s[2])
 		else
@@ -3110,8 +3125,8 @@ function loadmap(filename, createobjects)
 	
 	local x, y = 1, 1
 	for i = 1, #t do
-		if string.find(t[i], MULTIPLYDELIMITER) then --new stuff!
-			local r = tostring(t[i]):split(MULTIPLYDELIMITER)
+		if string.find(t[i], multiplydelimiter) then --new stuff!
+			local r = tostring(t[i]):split(multiplydelimiter)
 			
 			local coin = false
 			if string.sub(r[1], -1) == "c" then
@@ -3144,7 +3159,7 @@ function loadmap(filename, createobjects)
 			end
 			
 		else --Old stuff.
-			local r = tostring(t[i]):split(LAYERDELIMITER)
+			local r = tostring(t[i]):split(layerdelimiter)
 			
 			if string.sub(r[1], -1) == "c" then
 				r[1] = string.sub(r[1], 1, -2)
@@ -3460,7 +3475,7 @@ function loadmap(filename, createobjects)
 	
 	--MORE STUFF
 	for i = 3, #s2 do
-		s3 = s2[i]:split(EQUALSIGN)
+		s3 = s2[i]:split(equalsign)
 		if s3[1] == "backgroundr" then
 			background[1] = tonumber(s3[2])
 		elseif s3[1] == "backgroundg" then
@@ -4646,12 +4661,12 @@ function savemap(filename)
 					end
 					
 					if i ~= #map[x][y] then
-						s = s .. LAYERDELIMITER
+						s = s .. layerdelimiter
 					end
 				end
 				
 				if y ~= mapheight or x ~= mapwidth then
-					s = s .. BLOCKDELIMITER
+					s = s .. blockdelimiter
 				end
 			end
 		end

@@ -4,6 +4,11 @@ LAYERDELIMITER = "×"
 CATEGORYDELIMITER = "¸"
 MULTIPLYDELIMITER = "·"
 EQUALSIGN = "¨"
+BLOCKDELIMITEROLD = ","
+LAYERDELIMITEROLD = "-"
+CATEGORYDELIMITEROLD = ";"
+MULTIPLYDELIMITEROLD = "*"
+EQUALSIGNOLD = "="
 
 --SETABLE VARS--	
 --almost all vars are in "blocks", "blocks per second" or just "seconds". Should be obvious enough what's what.
