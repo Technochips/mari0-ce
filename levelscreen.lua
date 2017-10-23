@@ -88,7 +88,7 @@ end
 
 function levelscreen_update(dt)
 	levelscreentimer = levelscreentimer + dt
-	if levelscreentimer > blacktime then
+	if levelscreentimer > blacktime or love.mouse.isDown(1, 2, 3) or love.keyboard.isDown("space") then
 		if gamestate == "levelscreen" or gamestate == "sublevelscreen" then
 			startlevel(gamestate == "levelscreen")
 		else
