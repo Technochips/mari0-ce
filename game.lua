@@ -3986,7 +3986,9 @@ function game_mousepressed(x, y, button)
 end
 
 function game_wheelmoved(x, y)
-	if not editormode then
+	if editormode then
+		editor_wheelmoved(x, y)
+	else
 		if bullettime then
 			if y > 0 then
 				speedtarget = speedtarget + 0.1
@@ -4717,7 +4719,7 @@ function savemap(filename)
 	--preview
 	
 	previewimg = renderpreview()
-	previewimg:encode("mappacks/" .. mappack .. "/" .. filename .. ".png")
+	previewimg:encode("png", "mappacks/" .. mappack .. "/" .. filename .. ".png")
 	
 	print("Map saved as " .. "mappacks/" .. filename .. ".txt")
 	notice.new("Map saved!", notice.white, 2)

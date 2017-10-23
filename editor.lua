@@ -315,7 +315,7 @@ function editor_update(dt)
 		end
 		
 		if editorstate == "lightdraw" then
-			if love.mouse.isDown("l") then
+			if love.mouse.isDown(1) then
 				local mousex, mousey = mouse.getPosition()
 				local currentx, currenty = getMouseTile(mousex, mousey+8*scale)
 				
@@ -407,12 +407,12 @@ function editor_update(dt)
 			return
 		end
 		
-		if love.mouse.isDown("l") and allowdrag then
+		if love.mouse.isDown(1) and allowdrag then
 			local x, y = mouse.getPosition()
 			placetile(x, y)
 		end
 	elseif editorstate == "main" then
-		if love.mouse.isDown("l") then
+		if love.mouse.isDown(1) then
 			local mousex, mousey = mouse.getPosition()
 			if mousey >= minimapy*scale and mousey < (minimapy+minimapheight*2+4)*scale then
 				if mousex >= minimapx*scale and mousex < (minimapx+394)*scale then
@@ -1933,7 +1933,7 @@ function editor_mousepressed(x, y, button)
 	
 	if rightclickm then
 		allowdrag = false
-		if button == "r" or not rightclickm:mousepressed(x, y, button) then
+		if button == 2 or not rightclickm:mousepressed(x, y, button) then
 			closerightclickmenu()
 			return
 		else
@@ -1952,7 +1952,7 @@ function editor_mousepressed(x, y, button)
 		end
 	end
 	
-	if button == "l" then
+	if button == 1 then
 		if editormenuopen == false then
 			if editorstate == "lightdraw" then
 				lightdrawX, lightdrawY = getMouseTile(x, y+8*scale)
@@ -2012,7 +2012,7 @@ function editor_mousepressed(x, y, button)
 				end
 			end
 		end
-	elseif button == "m" then
+	elseif button == 3 then
 		local cox, coy = getMouseTile(x, y+8*scale)
 		if inmap(cox, coy) == false then
 			return
@@ -2021,73 +2021,7 @@ function editor_mousepressed(x, y, button)
 		tilesall()
 		currenttile = map[cox][coy][1]
 		
-	elseif button == "wu" then
-		if not editormenuopen then
-			if editentities then
-				if editenemies then
-					--get which current tile
-					local curr = 1
-					while enemies[curr] ~= currenttile and curr > 0 do
-						curr = curr + 1
-					end
-					
-					if curr-1 == 0 then
-						curr = #enemies+1
-					end
-					
-					currenttile = enemies[curr-1]
-				end
-			elseif animatedtilelist then
-				if currenttile > 10000 then
-					currenttile = currenttile - 1
-					if currenttile == 10000 then
-						currenttile = 10000+animatedtilecount
-					end
-				end
-			else
-				if currenttile > 0 then
-					currenttile = currenttile - 1
-					if currenttile == 0 then
-						currenttile = smbtilecount+portaltilecount+customtilecount
-					end
-				end
-			end
-		end
-		
-	elseif button == "wd" then
-		if not editormenuopen then
-			if editentities then
-				if editenemies then
-					--get which current tile
-					local curr = 1
-					while enemies[curr] ~= currenttile and curr < #enemies do
-						curr = curr + 1
-					end
-					
-					if curr+1 > #enemies then
-						curr = 0
-					end
-					
-					currenttile = enemies[curr+1]
-				end
-			elseif animatedtilelist then
-				if currenttile <= 10000+animatedtilecount then
-					currenttile = currenttile + 1
-					if currenttile == 10001+animatedtilecount then
-						currenttile = 10001
-					end
-				end
-			else
-				if currenttile <= smbtilecount+portaltilecount+customtilecount then
-					currenttile = currenttile + 1
-					if currenttile > smbtilecount+portaltilecount+customtilecount then
-						currenttile = 1
-					end
-				end
-			end
-		end
-		
-	elseif button == "r" then
+	elseif button == 2 then
 		if editormenuopen == false then
 			local tileX, tileY = getMouseTile(x, y+8*scale)
 			if inmap(tileX, tileY) == false then
@@ -2141,7 +2075,7 @@ function editor_mousereleased(x, y, button)
 		return
 	end
 	
-	if button == "l" then
+	if button == 1 then
 		if selectiondragging then
 			selectionend()
 		end
@@ -2158,6 +2092,74 @@ function editor_mousereleased(x, y, button)
 		for i, v in pairs(animationguilines) do
 			for k, w in pairs(v) do					
 				w:unclick(x, y, button)
+			end
+		end
+	end
+end
+
+function editor_wheelmoved(x, y)
+	if y > 0 then
+		if not editormenuopen then
+			if editentities then
+				if editenemies then
+					--get which current tile
+					local curr = 1
+					while enemies[curr] ~= currenttile and curr > 0 do
+						curr = curr + 1
+					end
+					
+					if curr-1 == 0 then
+						curr = #enemies+1
+					end
+					
+					currenttile = enemies[curr-1]
+				end
+			elseif animatedtilelist then
+				if currenttile > 10000 then
+					currenttile = currenttile - 1
+					if currenttile == 10000 then
+						currenttile = 10000+animatedtilecount
+					end
+				end
+			else
+				if currenttile > 0 then
+					currenttile = currenttile - 1
+					if currenttile == 0 then
+						currenttile = smbtilecount+portaltilecount+customtilecount
+					end
+				end
+			end
+		end
+	elseif y < 0 then
+		if not editormenuopen then
+			if editentities then
+				if editenemies then
+					--get which current tile
+					local curr = 1
+					while enemies[curr] ~= currenttile and curr < #enemies do
+						curr = curr + 1
+					end
+					
+					if curr+1 > #enemies then
+						curr = 0
+					end
+					
+					currenttile = enemies[curr+1]
+				end
+			elseif animatedtilelist then
+				if currenttile <= 10000+animatedtilecount then
+					currenttile = currenttile + 1
+					if currenttile == 10001+animatedtilecount then
+						currenttile = 10001
+					end
+				end
+			else
+				if currenttile <= smbtilecount+portaltilecount+customtilecount then
+					currenttile = currenttile + 1
+					if currenttile > smbtilecount+portaltilecount+customtilecount then
+						currenttile = 1
+					end
+				end
 			end
 		end
 	end
