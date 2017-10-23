@@ -195,10 +195,16 @@ function love.load(arg)
 	marioversion = 1107
 	versionstring = "version 1.0se"
 	
-	--version check by checking for a const that was added in 0.8.0 --todo: change to 0.9.0
-	if love._version_major == nil or (love._version_minor and love._version_minor < 9) then 
+	if love.getVersion == nil then 
 		versionerror = true
-		error("You have an outdated version of Love! Get 0.9.0 and retry.") 
+	else
+		local _vmajor, _vminor, _vrevision, _vcodename = love.getVersion()
+		if _vmajor == 0 and _vminor < 10 then
+			versionerror = true
+		end
+	end
+	if versionerror == true then
+		error("You have an outdated version of Love! Get 0.10.0 and retry.") 
 	end
 
 	math.mod = math.fmod
