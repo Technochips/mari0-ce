@@ -2136,8 +2136,9 @@ function mario:floorcollide(a, b, c, d)
 			end
 		end
 	end--]]
-	
-	if b.stompable then
+	local underwaterstompable = b.underwaterstompable
+	if underwaterstompable == nil then underwaterstompable = b.stompable end
+	if ((not self.underwater) and b.stompable) or (self.underwater and underwaterstompable) then
 		self:stompenemy(a, b, c, d)
 		return false
 	elseif a == "tile" then
