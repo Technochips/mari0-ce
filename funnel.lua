@@ -217,7 +217,7 @@ function funnel:draw()
 			endimg = excursionfunnelendimg
 		else
 			img = excursionfunnel2img
-			endimg = excursionfunnelendimg2
+			endimg = excursionfunnelend2img
 		end
 		
 		for i, v in pairs(self.funneltable) do
