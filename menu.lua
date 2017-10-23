@@ -1909,6 +1909,7 @@ function keypromptenter(t, ...)
 	axiserror = false
 	local buttononly = {"run", "jump", "reload", "use", "portal1", "portal2"}
 	local axisonly = {"aimx", "aimy"}
+	print(t)
 	if t ~= "key" or arg[1] ~= "escape" then
 		if t == "key" then
 			if tablecontains(axisonly, controlstable[optionsselection-3]) then
@@ -1922,6 +1923,10 @@ function keypromptenter(t, ...)
 			else
 				controls[skinningplayer][controlstable[optionsselection-3]] = {"joy", arg[1], "but", arg[2]}
 			end
+			print(controls[skinningplayer][controlstable[optionsselection-3]][1])
+			print(controls[skinningplayer][controlstable[optionsselection-3]][2])
+			print(controls[skinningplayer][controlstable[optionsselection-3]][3])
+			print(controls[skinningplayer][controlstable[optionsselection-3]][4])
 		elseif t == "joyhat" then
 			if tablecontains(buttononly, controlstable[optionsselection-3]) then
 				buttonerror = true
@@ -1954,21 +1959,24 @@ function keypromptstart()
 	prompt.joystick = {}
 	prompt.joysticks = love.joystick.getJoystickCount()
 	
+	local jss = love.joystick.getJoysticks()
+	
 	for i = 1, prompt.joysticks do
+		js = jss[i]
 		prompt.joystick[i] = {}
-		prompt.joystick[i].hats = love.joystick.getHatCount(i)
-		prompt.joystick[i].axes = love.joystick.getAxisCount(i)
+		prompt.joystick[i].hats = js:getHatCount()
+		prompt.joystick[i].axes = js:getAxisCount()
 		
 		prompt.joystick[i].validhats = {}
 		for j = 1, prompt.joystick[i].hats do
-			if love.joystick.getHat(i, j) == "c" then
+			if js:getHat(j) == "c" then
 				table.insert(prompt.joystick[i].validhats, j)
 			end
 		end
 		
 		prompt.joystick[i].axisposition = {}
 		for j = 1, prompt.joystick[i].axes do
-			table.insert(prompt.joystick[i].axisposition, love.joystick.getAxis(i, j))
+			table.insert(prompt.joystick[i].axisposition, js:getAxis(j))
 		end
 	end
 end
