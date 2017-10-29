@@ -1199,7 +1199,35 @@ function mario:updateangle()
 	if self.playernumber == mouseowner then
 		local scale = scale
 		if shaders and shaders.scale then scale = shaders.scale end
-		self.pointingangle = math.atan2(self.x+6/16-xscroll-(mouse.getX()/16/scale), (self.y-yscroll+6/16-.5)-(mouse.getY()/16/scale))
+		mx, my = mouse.getPosition()
+		if splitscreen then
+			if players == 2 then
+				if splitscreenplacement[2] == self.playernumber then
+					if splitscreenhorizontal then
+						my = my - (height*16*scale/2)
+					else
+						mx = mx - (width*16*scale/2)
+					end
+				end
+			elseif players > 2 then
+				if splitscreenplacement[1] == self.playernumber then
+					mx = mx * 2
+					my = my * 2
+				elseif splitscreenplacement[2] == self.playernumber then
+					mx = (mx * 2) - (width*16*scale)
+					my = my * 2
+				elseif splitscreenplacement[3] == self.playernumber then
+					mx = mx * 2
+					my = (my * 2) - (height*16*scale)
+				elseif splitscreenplacement[4] == self.playernumber then
+					mx = (mx * 2) - (width*16*scale)
+					my = (my * 2) - (height*16*scale)
+				end
+			end
+		end
+		mx = math.floor(mx)
+		my = math.floor(my)
+		self.pointingangle = math.atan2(self.x+6/16-xscroll-(mx/16/scale), (self.y-yscroll+6/16-.5)-(my/16/scale))
 	elseif #controls[self.playernumber]["aimx"] > 0 then
 		local x, y
 		

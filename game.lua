@@ -6,7 +6,6 @@ function game_load(suspended)
 	scrollfactor = 0
 	fscrollfactor = 0
 	love.graphics.setBackgroundColor(backgroundcolor[1])
-
 	
 	--LINK STUFF
 	mariocoincount = 0
@@ -53,6 +52,34 @@ function game_load(suspended)
 		continuegame()
 	elseif suspended then
 		marioworld = suspended
+	end
+	
+	splitscreen = true
+	splitscreenhorizontal = false
+	splitscreens = {}
+	xscrolls = {}
+	yscrolls = {}
+	for i = 1, players do
+		xscrolls[i] = 0
+		yscrolls[i] = 0
+		if players == 2 then
+			if splitscreenhorizontal then
+				splitscreens[i] = love.graphics.newCanvas(width*16*scale, height*16*scale/2)
+			else
+				splitscreens[i] = love.graphics.newCanvas(width*16*scale/2, height*16*scale)
+			end
+		else
+			splitscreens[i] = love.graphics.newCanvas(width*16*scale, height*16*scale)
+		end
+	end
+	if players == 1 then
+		splitscreenplacement = {1}
+	elseif players == 2 then
+		splitscreenplacement = {1, 2}
+	elseif players == 3 then
+		splitscreenplacement = {1, 2, 3}
+	elseif players == 4 then
+		splitscreenplacement = {1, 2, 3, 4}
 	end
 	
 	musicname = nil
@@ -765,7 +792,7 @@ function game_update(dt)
 	end
 end
 
-function drawlevel()
+function drawlevel(player)
 	if incognito then
 		return
 	end
@@ -1216,10 +1243,14 @@ function game_draw()
 	
 	--THIS IS WHERE MAP DRAWING AND SHIT BEGINS
 	
-	function scenedraw()
+	function scenedraw(dodrawui)
+		if dodrawui == nil then
+			dodrawui = true
+		end
+		
 		drawlevel()
 		
-		if bdrawui then
+		if dodrawui and bdrawui then
 			drawui()
 		end
 		
@@ -1999,6 +2030,26 @@ function game_draw()
 				end
 			end
 		end
+	elseif players > 1 then
+		for i = 1, players do
+			love.graphics.setCanvas(splitscreens[i])
+			scenedraw(false)
+			love.graphics.setCanvas()
+			if players == 2 then
+				if splitscreenhorizontal then
+					love.graphics.draw(splitscreens[i], 0, ((height*16*scale)/2)*(splitscreenplacement[i]-1)) --fancy hack for less if statements
+				else
+					love.graphics.draw(splitscreens[i], ((width*16*scale)/2)*(splitscreenplacement[i]-1)) --same fancy hack for less if statements
+				end
+			elseif players > 2 then
+				if splitscreenplacement[i] <= 2 then
+					love.graphics.draw(splitscreens[i], ((width*16*scale)/2)*(splitscreenplacement[i]-1), 0, 0, 0.5)
+				else
+					love.graphics.draw(splitscreens[i], ((width*16*scale)/2)*(splitscreenplacement[i]-3), (height*16*scale)/2, 0, 0.5)
+				end
+			end
+		end
+		drawui()
 	else
 		scenedraw()
 	end
